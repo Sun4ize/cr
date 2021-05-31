@@ -1,2 +1,2 @@
-Robot04.dll heathcliff4 E
+Robot04.dll heathcliff4 
 Robot01.dll sunrize1 Lyaskin

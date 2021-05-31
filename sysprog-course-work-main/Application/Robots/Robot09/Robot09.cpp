@@ -122,9 +122,8 @@ extern "C" __declspec(dllexport) void DoStep(StepInfo * _stepInfo)
 {
 	srand(time(NULL));
 
-	//vector <riv> rivals;
-
 	stepInfo = _stepInfo;
+	int ID = stepInfo->ID;
 
 	for (auto it = stepInfo->robotsInfo.begin(); it != stepInfo->robotsInfo.end(); ++it) {
 		if (_stepInfo->ID == it->ID)
@@ -154,7 +153,6 @@ extern "C" __declspec(dllexport) void DoStep(StepInfo * _stepInfo)
 	int Amax = 1.0 * A * E / Emax;
 	int Pmax = 1.0 * P * E / Emax;*/
 	Point energy;
-	//, mech;
 	energy = getCStation(x, y);
 
 	int se = Pythagoras(energy.x, energy.y);

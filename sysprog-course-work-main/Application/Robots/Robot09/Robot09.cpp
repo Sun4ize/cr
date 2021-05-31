@@ -127,8 +127,8 @@ extern "C" __declspec(dllexport) void DoStep(StepInfo * _stepInfo)
 	stepInfo = _stepInfo;
 
 	for (auto it = stepInfo->robotsInfo.begin(); it != stepInfo->robotsInfo.end(); ++it) {
-		if (_stepInfo->ID == it->ID) {
-			//_myInfo = *it;
+		if (_stepInfo->ID == it->ID)
+		{
 			myInfo = new RobotInfo(*it);
 			break;
 		}
@@ -147,29 +147,25 @@ extern "C" __declspec(dllexport) void DoStep(StepInfo * _stepInfo)
 	int Rmax = stepInfo->gameConfig.R_max;
 
 	int maxDistToMove = stepInfo->gameConfig.V_max * myInfo->V * myInfo->E / (stepInfo->gameConfig.L_max * stepInfo->gameConfig.E_max);
-
+	int maxDistToAttack = stepInfo->gameConfig.R_max * myInfo->V * myInfo->E / (stepInfo->gameConfig.L_max * stepInfo->gameConfig.E_max);
+	//int curDistance = Pythagoras(vInfo.dX, vInfo.dY);
 	/*int maxDistToMove = 1.0 * Vmax * V / Lmax * E / Emax;
 	int S_amax = 1.0 * Rmax * V / Lmax * E / Emax;
 	int Amax = 1.0 * A * E / Emax;
 	int Pmax = 1.0 * P * E / Emax;*/
-	Point energy, mech;
+	Point energy;
+	//, mech;
 	energy = getCStation(x, y);
-	//mech = getMStation(x, y);
 
 	int se = Pythagoras(energy.x, energy.y);
-	int sm = Pythagoras(mech.x, mech.y);
+	//int sm = Pythagoras(mech.x, mech.y);
 
-	if ((se == 0) && ((E < 0.95 * Emax) || (stepInfo->stepNumber > 975)) && (L > 0.7 * Lmax))
+	if ((se == 0) && ((E < 0.7 * Emax) || (stepInfo->stepNumber > 900)) && (L > 0.7 * Lmax))
 	{
 		stepInfo->pRobotActions->addActionRedistribution(0, L, 0);
 		return;
 	}
 
-	if ((sm == 0) && (L < Lmax))
-	{
-		stepInfo->pRobotActions->addActionRedistribution(0, L, 0);
-		return;
-	}
 
 	if ((E < 0.7 * Emax) || (stepInfo->stepNumber > 980))
 	{
@@ -202,56 +198,59 @@ extern "C" __declspec(dllexport) void DoStep(StepInfo * _stepInfo)
 			float A_r = stepInfo->gameConfig.RND_min * myInfo->A;
 			float P_r = (1 - stepInfo->gameConfig.RND_min) * victim->P;
 			int delta = (A_r * myInfo->E - P_r * victim->E) / stepInfo->gameConfig.E_max;
-			if (delta > 0) {
-				int maxDistToAttack = stepInfo->gameConfig.R_max * myInfo->V * myInfo->E /
-					(stepInfo->gameConfig.L_max * stepInfo->gameConfig.E_max);
+			if (delta > 0)
+			{
+				maxDistToAttack = stepInfo->gameConfig.R_max * myInfo->V * myInfo->E / (stepInfo->gameConfig.L_max * stepInfo->gameConfig.E_max);
 				int curDistance = Pythagoras(vInfo.dX, vInfo.dY);//дистанция между нами и целью
-				//если дистанция для атаки нормальная
-				//и после атаки мы не умрем, то атакуем
-				if (curDistance <= maxDistToAttack && myInfo->E - stepInfo->gameConfig.dE_A > 0) {
+				if (curDistance <= maxDistToAttack && myInfo->E - stepInfo->gameConfig.dE_A > 0)
+				{
 					stepInfo->pRobotActions->addActionAttack(vInfo.ID);
 				}
-				else {
+				else
+				{
 					//расстояние, которое необходимо преодолеть, чтобы дистанция 
 					//между нами и целью была допустимой для атаки
 					int shift = curDistance - maxDistToAttack;
 					//если для перемещения с последующей атакой нам хватит дистанции
 					//и на все это хватит энергии, то...
-					if (shift < maxDistToMove &&
-						myInfo->E - stepInfo->gameConfig.dE_V - stepInfo->gameConfig.dE_A > 0) {
-
+					if (shift < maxDistToMove && myInfo->E - stepInfo->gameConfig.dE_V - stepInfo->gameConfig.dE_A > 0)
+					{
 						double ratio_x = abs(vInfo.dX) / (abs(vInfo.dX) + abs(vInfo.dY));
 						int shift_x = ratio_x * shift;
 
-						if (vInfo.dY >= 0) {
+						if (vInfo.dY >= 0)
+						{
 							stepInfo->pRobotActions->addActionMove(shift_x, shift - abs(shift_x));
 							myInfo->x += shift_x;
 							myInfo->y += shift - abs(vInfo.dX);
 						}
-						else {
+						else
+						{
 							stepInfo->pRobotActions->addActionMove(shift_x, -(shift - abs(shift_x)));
 							myInfo->x += shift_x;
 							myInfo->y += -(shift - abs(vInfo.dX));
 						}
 
-						maxDistToAttack = stepInfo->gameConfig.R_max * myInfo->V * (myInfo->E - stepInfo->gameConfig.dE_V) /
-							(stepInfo->gameConfig.L_max * stepInfo->gameConfig.E_max);
+						maxDistToAttack = stepInfo->gameConfig.R_max * myInfo->V * (myInfo->E - stepInfo->gameConfig.dE_V) / (stepInfo->gameConfig.L_max * stepInfo->gameConfig.E_max);
 						Point newDist = getDistance(Point(myInfo->x, myInfo->y), Point(victim->x, victim->y));
 						if (Pythagoras(newDist.x, newDist.y) <= maxDistToAttack)
 							stepInfo->pRobotActions->addActionAttack(vInfo.ID);
 					}
-					else {
+					else
+					{
 						//нам не хватило дистанции => просто пойдем по направлению к
 						//противнику и проверим есть ли у нас на это энергия
-						if (myInfo->E - stepInfo->gameConfig.dE_V > 0) {
+						if (myInfo->E - stepInfo->gameConfig.dE_V > 0)
+						{
 
 							double ratio_x = abs(vInfo.dX) / (abs(vInfo.dX) + abs(vInfo.dY));
 							int shift_x = ratio_x * maxDistToMove;
-
-							if (vInfo.dY >= 0) {
+							if (vInfo.dY >= 0)
+							{
 								stepInfo->pRobotActions->addActionMove(shift_x, maxDistToMove - abs(shift_x));
 							}
-							else {
+							else
+							{
 								stepInfo->pRobotActions->addActionMove(shift_x, -(maxDistToMove - abs(shift_x)));
 							}
 
@@ -264,7 +263,7 @@ extern "C" __declspec(dllexport) void DoStep(StepInfo * _stepInfo)
 	}
 
 
-	stepInfo->pRobotActions->addActionRedistribution(0.5 * L, 0.4 * L, 0.1 * L);
+	stepInfo->pRobotActions->addActionRedistribution(0.35 * L, 0.35 * L, 0.3 * L);
 
 	int direction = (rand() + x) % 8;
 	switch (direction)
@@ -297,7 +296,7 @@ extern "C" __declspec(dllexport) void DoStep(StepInfo * _stepInfo)
 		break;
 	}
 
-	return;
+	delete myInfo;
 }
 
 

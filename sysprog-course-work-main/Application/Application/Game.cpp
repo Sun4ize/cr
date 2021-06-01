@@ -1249,7 +1249,7 @@ bool Game::setRobotsInfo(CString filePath)
 	RobotFunction standartFunction = (RobotFunction)GetProcAddress(standartDll, "DoStep");
 	vector<Robot*> tmp;
 	m_Authors.insert(make_pair("NPC", tmp));
-	for (int i = 0; i < 5; ++i){
+	for (int i = 0; i < 20; ++i){
 		Robot* curRobot = new Robot;
 		curRobot->ID = ID++;
 

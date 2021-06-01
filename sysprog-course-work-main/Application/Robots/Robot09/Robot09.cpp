@@ -92,6 +92,7 @@ VictimInfo getVictimInfo() {
 				min_dY = abs(vec.y);
 				victimID = it->ID;
 			}
+
 		}
 	}
 
@@ -117,6 +118,24 @@ Point getCStation(int x, int y) {
 	return Point(real_dX, real_dY);
 }
 
+Point getMStation(int x, int y) {
+	UINT min_dX = stepInfo->gameConfig.W + 1;
+	UINT min_dY = stepInfo->gameConfig.H + 1;
+	int real_dX = 1000, real_dY = 1000;
+	Point its;
+	its.x = x;
+	its.y = y;
+	for (auto station = stepInfo->maintenance.begin(); station != stepInfo->maintenance.end(); ++station) {
+		Point vec = getDistance(its, Point(station->first, station->second));
+		if (Pythagoras(vec.x, vec.y) < Pythagoras(min_dX, min_dY)) {
+			real_dX = vec.x;
+			real_dY = vec.y;
+			min_dX = abs(vec.x);
+			min_dY = abs(vec.y);
+		}
+	}
+	return Point(real_dX, real_dY);
+}
 
 extern "C" __declspec(dllexport) void DoStep(StepInfo * _stepInfo)
 {
@@ -152,33 +171,54 @@ extern "C" __declspec(dllexport) void DoStep(StepInfo * _stepInfo)
 	int S_amax = 1.0 * Rmax * V / Lmax * E / Emax;
 	int Amax = 1.0 * A * E / Emax;
 	int Pmax = 1.0 * P * E / Emax;*/
-	Point energy;
+	Point energy, mech;
 	energy = getCStation(x, y);
+	mech = getMStation(x, y);
+	int S_energy = Pythagoras(energy.x, energy.y);
+	int  S_merch = Pythagoras(mech.x, mech.y);
 
-	int se = Pythagoras(energy.x, energy.y);
-	//int sm = Pythagoras(mech.x, mech.y);
-
-	if ((se == 0) && ((E < 0.7 * Emax) || (stepInfo->stepNumber > 900)) && (L > 0.7 * Lmax))
+	if ((S_energy == 0) && ((E < 0.7 * Emax) || (stepInfo->stepNumber > 950)) && (L > 0.7 * Lmax))
 	{
-		stepInfo->pRobotActions->addActionRedistribution(0, L, 0);
+		stepInfo->pRobotActions->addActionRedistribution(L * 0.5, L * 0.5, 0);
 		return;
 	}
 
-
-	if ((E < 0.7 * Emax) || (stepInfo->stepNumber > 980))
+	
+	if ((E < 0.7 * Emax) || (stepInfo->stepNumber > 950))
 	{
 
-		if (maxDistToMove > se)
+		if (maxDistToMove > S_energy)
 		{
 			stepInfo->pRobotActions->addActionMove(energy.x, energy.y);
+			stepInfo->pRobotActions->addActionRedistribution(L * 0.5, L * 0.5, 0);
+		}
+		else
+		{
+			energy.x = energy.x * maxDistToMove / S_energy;
+			energy.y =  energy.y * maxDistToMove / S_energy;
+			stepInfo->pRobotActions->addActionRedistribution(0, 0.3 * L, 0.7 * L);
+			stepInfo->pRobotActions->addActionMove(energy.x, energy.y);
+		}
+		return;
+	}
+
+	else if (L < 0.7 * Lmax)
+	{
+		if (maxDistToMove >  S_merch)
+		{
+			stepInfo->pRobotActions->addActionMove(mech.x, mech.y);
 			stepInfo->pRobotActions->addActionRedistribution(0, L, 0);
 		}
 		else
 		{
-			energy.x = 1.0 * energy.x * maxDistToMove / se;
-			energy.y = 1.0 * energy.y * maxDistToMove / se;
-			stepInfo->pRobotActions->addActionRedistribution(0, 0.2 * L, 0.8 * L);
-			stepInfo->pRobotActions->addActionMove(energy.x, energy.y);
+			if (L > 0.25 * Lmax)
+				stepInfo->pRobotActions->addActionRedistribution(0, 0.4 * L, 0.6 * L);
+			else stepInfo->pRobotActions->addActionRedistribution(0, 0, L);
+
+			mech.x = 1.0 * mech.x * maxDistToMove /  S_merch;
+			mech.y = 1.0 * mech.y * maxDistToMove /  S_merch;
+			stepInfo->pRobotActions->addActionMove(mech.x, mech.y);
+
 		}
 		return;
 	}
@@ -199,69 +239,20 @@ extern "C" __declspec(dllexport) void DoStep(StepInfo * _stepInfo)
 			if (delta > 0)
 			{
 				maxDistToAttack = stepInfo->gameConfig.R_max * myInfo->V * myInfo->E / (stepInfo->gameConfig.L_max * stepInfo->gameConfig.E_max);
-				int curDistance = Pythagoras(vInfo.dX, vInfo.dY);//дистанция между нами и целью
-				if (curDistance <= maxDistToAttack && myInfo->E - stepInfo->gameConfig.dE_A > 0)
+				if (myInfo->E - stepInfo->gameConfig.dE_A > 0)
 				{
 					stepInfo->pRobotActions->addActionAttack(vInfo.ID);
 				}
-				else
-				{
-					//расстояние, которое необходимо преодолеть, чтобы дистанция 
-					//между нами и целью была допустимой для атаки
-					int shift = curDistance - maxDistToAttack;
-					//если для перемещения с последующей атакой нам хватит дистанции
-					//и на все это хватит энергии, то...
-					if (shift < maxDistToMove && myInfo->E - stepInfo->gameConfig.dE_V - stepInfo->gameConfig.dE_A > 0)
-					{
-						double ratio_x = abs(vInfo.dX) / (abs(vInfo.dX) + abs(vInfo.dY));
-						int shift_x = ratio_x * shift;
-
-						if (vInfo.dY >= 0)
-						{
-							stepInfo->pRobotActions->addActionMove(shift_x, shift - abs(shift_x));
-							myInfo->x += shift_x;
-							myInfo->y += shift - abs(vInfo.dX);
-						}
-						else
-						{
-							stepInfo->pRobotActions->addActionMove(shift_x, -(shift - abs(shift_x)));
-							myInfo->x += shift_x;
-							myInfo->y += -(shift - abs(vInfo.dX));
-						}
-
-						maxDistToAttack = stepInfo->gameConfig.R_max * myInfo->V * (myInfo->E - stepInfo->gameConfig.dE_V) / (stepInfo->gameConfig.L_max * stepInfo->gameConfig.E_max);
-						Point newDist = getDistance(Point(myInfo->x, myInfo->y), Point(victim->x, victim->y));
-						if (Pythagoras(newDist.x, newDist.y) <= maxDistToAttack)
-							stepInfo->pRobotActions->addActionAttack(vInfo.ID);
-					}
-					else
-					{
-						//нам не хватило дистанции => просто пойдем по направлению к
-						//противнику и проверим есть ли у нас на это энергия
-						if (myInfo->E - stepInfo->gameConfig.dE_V > 0)
-						{
-
-							double ratio_x = abs(vInfo.dX) / (abs(vInfo.dX) + abs(vInfo.dY));
-							int shift_x = ratio_x * maxDistToMove;
-							if (vInfo.dY >= 0)
-							{
-								stepInfo->pRobotActions->addActionMove(shift_x, maxDistToMove - abs(shift_x));
-							}
-							else
-							{
-								stepInfo->pRobotActions->addActionMove(shift_x, -(maxDistToMove - abs(shift_x)));
-							}
-
-						}
-					}
-				}
+				Point newDist = getDistance(Point(myInfo->x, myInfo->y), Point(victim->x, victim->y));
+				if (Pythagoras(newDist.x, newDist.y) <= maxDistToAttack)
+					stepInfo->pRobotActions->addActionAttack(vInfo.ID);
 			}
 		}
 
 	}
 
 
-	stepInfo->pRobotActions->addActionRedistribution(0.35 * L, 0.35 * L, 0.3 * L);
+	stepInfo->pRobotActions->addActionRedistribution(0.5 * L, 0.35 * L, 0.15 * L);
 
 	int direction = (rand() + x) % 8;
 	switch (direction)
@@ -294,7 +285,7 @@ extern "C" __declspec(dllexport) void DoStep(StepInfo * _stepInfo)
 		break;
 	}
 
-	delete myInfo;
+	//delete myInfo;
 }
 
 

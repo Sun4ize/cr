@@ -252,7 +252,7 @@ extern "C" __declspec(dllexport) void DoStep(StepInfo * _stepInfo)
 	}
 
 
-	stepInfo->pRobotActions->addActionRedistribution(0.5 * L, 0.35 * L, 0.15 * L);
+	stepInfo->pRobotActions->addActionRedistribution(0.45 * L, 0.45 * L, 0.1 * L);
 
 	int direction = (rand() + x) % 8;
 	switch (direction)

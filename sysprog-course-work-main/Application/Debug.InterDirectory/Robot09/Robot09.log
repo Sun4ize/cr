@@ -1,0 +1,21 @@
+﻿  stdafx.cpp
+  dllmain.cpp
+  Robot09.cpp
+E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Robots\Robot09\Robot09.cpp(142,12): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Robots\Robot09\Robot09.cpp(182,63): warning C4244: аргумент: преобразование "double" в "unsigned int", возможна потеря данных
+E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Robots\Robot09\Robot09.cpp(182,54): warning C4244: аргумент: преобразование "double" в "unsigned int", возможна потеря данных
+E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Robots\Robot09\Robot09.cpp(193,64): warning C4244: аргумент: преобразование "double" в "unsigned int", возможна потеря данных
+E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Robots\Robot09\Robot09.cpp(193,55): warning C4244: аргумент: преобразование "double" в "unsigned int", возможна потеря данных
+E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Robots\Robot09\Robot09.cpp(199,69): warning C4244: аргумент: преобразование "double" в "unsigned int", возможна потеря данных
+E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Robots\Robot09\Robot09.cpp(199,60): warning C4244: аргумент: преобразование "double" в "unsigned int", возможна потеря данных
+E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Robots\Robot09\Robot09.cpp(215,70): warning C4244: аргумент: преобразование "double" в "unsigned int", возможна потеря данных
+E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Robots\Robot09\Robot09.cpp(215,61): warning C4244: аргумент: преобразование "double" в "unsigned int", возможна потеря данных
+E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Robots\Robot09\Robot09.cpp(218,42): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Robots\Robot09\Robot09.cpp(219,42): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Robots\Robot09\Robot09.cpp(238,14): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Robots\Robot09\Robot09.cpp(247,42): warning C4018: <=: несоответствие типов со знаком и без знака
+E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Robots\Robot09\Robot09.cpp(255,75): warning C4244: аргумент: преобразование "double" в "unsigned int", возможна потеря данных
+E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Robots\Robot09\Robot09.cpp(255,66): warning C4244: аргумент: преобразование "double" в "unsigned int", возможна потеря данных
+E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Robots\Robot09\Robot09.cpp(255,56): warning C4244: аргумент: преобразование "double" в "unsigned int", возможна потеря данных
+     Создается библиотека E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Debug\Robot09.lib и объект E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Debug\Robot09.exp
+  Robot09.vcxproj -> E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Debug\Robot09.dll

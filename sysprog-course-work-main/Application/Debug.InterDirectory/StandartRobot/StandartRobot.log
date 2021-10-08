@@ -1,0 +1,11 @@
+﻿  stdafx.cpp
+  dllmain.cpp
+  StandartRobot.cpp
+E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Robots\StandartRobot\StandartRobot.cpp(147,12): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Robots\StandartRobot\StandartRobot.cpp(167,17): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
+E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Robots\StandartRobot\StandartRobot.cpp(200,14): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Robots\StandartRobot\StandartRobot.cpp(224,19): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
+E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Robots\StandartRobot\StandartRobot.cpp(242,44): warning C4018: <=: несоответствие типов со знаком и без знака
+E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Robots\StandartRobot\StandartRobot.cpp(252,20): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
+     Создается библиотека E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Debug\StandartRobot.lib и объект E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Debug\StandartRobot.exp
+  StandartRobot.vcxproj -> E:\УЧЕБА\6 семестр\Системное программирование\Курсовая_работа\cr\sysprog-course-work-main\Application\Debug\StandartRobot.dll
